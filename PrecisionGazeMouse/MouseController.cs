@@ -29,7 +29,8 @@ namespace PrecisionGazeMouse
             EYEX_AND_SMARTNAV,
             EYEX_ONLY,
             TRACKIR_ONLY,
-            EVIACAM_ONLY
+            TRACKIR_ONLY_JOYSTICK,
+            EVIACAM_ONLY,
         };
         Mode mode;
 
@@ -141,6 +142,10 @@ namespace PrecisionGazeMouse
                 case Mode.TRACKIR_ONLY:
                     warp = new NoWarpPointer(getScreenCenter());
                     prec = new TrackIRPrecisionPointer(PrecisionPointerMode.BOTH, sensitivity);
+                    break;
+                case Mode.TRACKIR_ONLY_JOYSTICK:
+                    warp = new NoWarpPointer (getScreenCenter ());
+                    prec = new TrackIRPrecisionPointer (PrecisionPointerMode.BOTH, sensitivity);
                     break;
                 case Mode.EYEX_ONLY:
                     warp = new EyeXWarpPointer();

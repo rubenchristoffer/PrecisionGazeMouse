@@ -234,6 +234,12 @@ namespace PrecisionGazeMouse
                     gazeTracker.Enabled = false;
                     overlay.Hide();
                     break;
+                case "TrackIR Only Joystick":
+                    controller.setMode (MouseController.Mode.TRACKIR_ONLY_JOYSTICK);
+                    warpBar.Enabled = false;
+                    gazeTracker.Enabled = false;
+                    overlay.Hide ();
+                    break;
                 default:
                     break;
             }
