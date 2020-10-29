@@ -144,8 +144,8 @@ namespace PrecisionGazeMouse
                     prec = new TrackIRPrecisionPointer(PrecisionPointerMode.BOTH, sensitivity);
                     break;
                 case Mode.TRACKIR_ONLY_JOYSTICK:
-                    warp = new NoWarpPointer (getScreenCenter ());
-                    prec = new TrackIRPrecisionPointer (PrecisionPointerMode.BOTH, sensitivity);
+                    warp = new NoWarpPointer ();
+                    prec = new TrackIRPrecisionPointer (PrecisionPointerMode.JOYSTICK, sensitivity);
                     break;
                 case Mode.EYEX_ONLY:
                     warp = new EyeXWarpPointer();

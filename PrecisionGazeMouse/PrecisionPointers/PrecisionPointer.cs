@@ -6,7 +6,8 @@ namespace PrecisionGazeMouse.PrecisionPointers
     {
         ROTATION,
         TRANSLATION,
-        BOTH
+        BOTH,
+        JOYSTICK
     }
 
     interface PrecisionPointer : System.IDisposable

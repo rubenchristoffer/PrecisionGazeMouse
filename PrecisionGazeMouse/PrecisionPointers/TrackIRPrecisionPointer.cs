@@ -36,6 +36,7 @@ namespace PrecisionGazeMouse.PrecisionPointers
             this.mode = mode;
             trackIRclient = new TrackIRUnity.TrackIRClient();  // Create an instance of the TrackerIR Client to get data from.
             this.sensitivity = sensitivity;
+
             if (trackIRclient != null)
             {
                 string status = trackIRclient.TrackIR_Enhanced_Init();
@@ -95,48 +96,46 @@ namespace PrecisionGazeMouse.PrecisionPointers
         public Point GetNextPoint(Point warpPoint)
         {
             Rectangle screenSize = PrecisionGazeMouseForm.GetScreenSize();
-            switch (mode)
-            {
+            switch (mode) {
                 case (PrecisionPointerMode.ROTATION):
-                    rot = this.getRotation();
-                    if (rot != null)
-                    {
+                    rot = this.getRotation ();
+                    if (rot != null) {
                         double basePitch = (warpPoint.Y - screenSize.Height / 2.0) / (screenSize.Height / 2.0) * 200.0;
-                        int yOffset = (int)((rot.pitch - basePitch) * sensitivity / 20);
+                        int yOffset = (int) ((rot.pitch - basePitch) * sensitivity / 20);
 
                         double baseYaw = (warpPoint.X - screenSize.Width / 2.0) / (screenSize.Width / 2.0) * 600.0;
-                        int xOffset = (int)((-1 * rot.yaw - baseYaw) * sensitivity / 20);
+                        int xOffset = (int) ((-1 * rot.yaw - baseYaw) * sensitivity / 20);
 
-                        warpPoint.Offset(xOffset, yOffset);
+                        warpPoint.Offset (xOffset, yOffset);
 
                         return warpPoint;
                     }
                     break;
                 case (PrecisionPointerMode.TRANSLATION):
-                    trans = this.getTranslation();
-                    if (trans != null)
-                    {
-                        warpPoint.Offset((int)(trans.x / 1.5), (int)(trans.y / 1.5));
+                    trans = this.getTranslation ();
+                    if (trans != null) {
+                        warpPoint.Offset ((int) (trans.x / 1.5), (int) (trans.y / 1.5));
                         return warpPoint;
                     }
                     break;
                 case (PrecisionPointerMode.BOTH):
-                    trans = this.getTranslation();
-                    if (trans != null)
-                    {
-                        warpPoint.Offset((int)(trans.x / 1.5), 0); // set y to zero because translating head/up down is difficult, and it throws off the rotation
+                    trans = this.getTranslation ();
+                    if (trans != null) {
+                        warpPoint.Offset ((int) (trans.x / 1.5), 0); // set y to zero because translating head/up down is difficult, and it throws off the rotation
                     }
-                    rot = this.getRotation();
-                    if (rot != null)
-                    {
+                    rot = this.getRotation ();
+                    if (rot != null) {
                         double basePitch = (warpPoint.Y - screenSize.Height / 2.0) / (screenSize.Height / 2.0) * 200.0;
-                        int yOffset = (int)((rot.pitch - basePitch) * sensitivity / 20);
+                        int yOffset = (int) ((rot.pitch - basePitch) * sensitivity / 20);
 
                         double baseYaw = (warpPoint.X - screenSize.Width / 2.0) / (screenSize.Width / 2.0) * 600.0;
-                        int xOffset = (int)((-1 * rot.yaw - baseYaw) * sensitivity / 20);
+                        int xOffset = (int) ((-1 * rot.yaw - baseYaw) * sensitivity / 20);
 
-                        warpPoint.Offset(xOffset, yOffset);
+                        warpPoint.Offset (xOffset, yOffset);
                     }
+                    return warpPoint;
+                case (PrecisionPointerMode.JOYSTICK):
+                    warpPoint.X += 5;
                     return warpPoint;
             }
 
