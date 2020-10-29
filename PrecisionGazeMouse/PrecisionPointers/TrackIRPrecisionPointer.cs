@@ -135,7 +135,23 @@ namespace PrecisionGazeMouse.PrecisionPointers
                     }
                     return warpPoint;
                 case (PrecisionPointerMode.JOYSTICK):
-                    warpPoint.X += 5;
+                    rot = this.getRotation ();
+
+                    float xValue = -1 * rot.yaw / 100;
+                    float yValue = rot.pitch / 100;
+
+                    warpPoint.X = (int) Math.Floor (xValue / 2f);
+                    warpPoint.X = Math.Max (-10, Math.Min (10, warpPoint.X));
+
+                    if (Math.Abs (xValue) < 5)
+                        warpPoint.X = 0;
+
+                    warpPoint.Y = (int) Math.Floor (yValue / 2f);
+                    warpPoint.Y = Math.Max (-10, Math.Min (10, warpPoint.Y));
+
+                    if (Math.Abs (yValue) < 5)
+                        warpPoint.Y = 0;
+
                     return warpPoint;
             }
 

@@ -353,6 +353,6 @@
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.TextBox PauseOnKeyInput;
         private System.Windows.Forms.Label PauseOnKey;
-    }
+	}
 }
 
