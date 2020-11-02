@@ -104,6 +104,7 @@ namespace PrecisionGazeMouse
         private const int MOUSEEVENTF_RIGHTDOWN = 0x08;
         private const int MOUSEEVENTF_RIGHTUP = 0x10;
         private const int MOUSEEVENTF_MOVE = 0x01;
+        private const int MOUSEEVENTF_MOVE_NOCOALESCE = 0x2000;
 
         public MouseController(UpdateCursorPosition updateCursorPosition)
         {
@@ -394,7 +395,7 @@ namespace PrecisionGazeMouse
         }
 
         private void sendRelativeMoveMouseEvent (int dx, int dy) {
-            mouse_event (MOUSEEVENTF_MOVE, (uint)dx, (uint)dy, 0, 0);
+            mouse_event (MOUSEEVENTF_MOVE | MOUSEEVENTF_MOVE_NOCOALESCE, (uint)dx, (uint)dy, 0, 0);
         }
 
         private Point getScreenCenter()

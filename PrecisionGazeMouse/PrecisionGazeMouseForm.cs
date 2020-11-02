@@ -41,7 +41,7 @@ namespace PrecisionGazeMouse
 
             Timer refreshTimer = new System.Windows.Forms.Timer();
             refreshTimer.Tick += new EventHandler(RefreshScreen);
-            refreshTimer.Interval = 33;
+            refreshTimer.Interval = 1;
             refreshTimer.Start();
 
             if (Properties.Settings.Default.ContinuousMovement)
