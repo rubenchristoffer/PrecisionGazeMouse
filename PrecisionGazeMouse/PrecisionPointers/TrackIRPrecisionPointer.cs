@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Timers;
 using TrackIRUnity;
@@ -30,6 +31,13 @@ namespace PrecisionGazeMouse.PrecisionPointers
         HeadRotation rot;
         HeadTranslation trans;
         int sensitivity;
+
+        /*
+         * If these values are true, mouse moves in respective direction until they are
+         * set to false. When they are false, mouse moves like normal TrackIR Only mode.
+         */
+        public bool xJoystickMode { get; private set; }
+        public bool yJoystickMode { get; private set; }
 
         public TrackIRPrecisionPointer(PrecisionPointerMode mode, int sensitivity)
         {
@@ -137,20 +145,24 @@ namespace PrecisionGazeMouse.PrecisionPointers
                 case (PrecisionPointerMode.JOYSTICK):
                     rot = this.getRotation ();
 
-                    float xValue = -1 * rot.yaw / 100 * 2;
-                    float yValue = rot.pitch / 100 * 2;
+                    float xValue = -1 * rot.yaw / 100;
+                    float yValue = rot.pitch / 100;
+                    
+                    if (xJoystickMode = (Math.Abs(xValue) <= 20)) {
+                        float referenceValue = 40; // when value is referenceValue, right of screen, -referenceValue left of screen
+                        float normalized = (xValue + referenceValue) / (referenceValue * 2);
+                        warpPoint.X = (int) Math.Floor(normalized * screenSize.Width);
+                    } else {
+                        warpPoint.X = (int) Math.Floor (xValue);
+                    }
 
-                    warpPoint.X = (int) Math.Floor (xValue);
-                    warpPoint.X = Math.Max (-15, Math.Min (15, warpPoint.X));
-
-                    if (Math.Abs (xValue) < 1)
-                        warpPoint.X = 0;
-
-                    warpPoint.Y = (int) Math.Floor (yValue);
-                    warpPoint.Y = Math.Max (-15, Math.Min (15, warpPoint.Y));
-
-                    if (Math.Abs (yValue) < 1)
-                        warpPoint.Y = 0;
+                    if (yJoystickMode = (Math.Abs(yValue) <= 20)) {
+                        float referenceValue = 40; // when value is referenceValue, top of screen, -referenceValue bottom of screen
+                        float normalized = (yValue + referenceValue) / (referenceValue * 2);
+                        warpPoint.Y = (int) Math.Floor (normalized * screenSize.Width);
+                    } else {
+                        warpPoint.Y = (int) Math.Floor (yValue);
+                    }
 
                     return warpPoint;
             }

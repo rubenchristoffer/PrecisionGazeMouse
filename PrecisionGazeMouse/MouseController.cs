@@ -105,8 +105,9 @@ namespace PrecisionGazeMouse
         private const int MOUSEEVENTF_RIGHTUP = 0x10;
         private const int MOUSEEVENTF_MOVE = 0x01;
         private const int MOUSEEVENTF_MOVE_NOCOALESCE = 0x2000;
+        private const int MOUSEEVENTF_ABSOLUTE = 0x8000;
 
-        public MouseController(UpdateCursorPosition updateCursorPosition)
+        public MouseController (UpdateCursorPosition updateCursorPosition)
         {
             this.updateCursorPosition = updateCursorPosition;
         }
@@ -357,8 +358,22 @@ namespace PrecisionGazeMouse
                     }
                     else if (mode == Mode.TRACKIR_ONLY_JOYSTICK)
                     {
-                        finalPoint = prec.GetNextPoint (warpPoint);
-                        sendRelativeMoveMouseEvent (finalPoint.X, finalPoint.Y);
+                        TrackIRPrecisionPointer trackIRPrec = ((TrackIRPrecisionPointer) prec);
+                        Point nextPoint = trackIRPrec.GetNextPoint (warpPoint);
+                        int diffX = nextPoint.X - finalPoint.X;
+                        int diffY = nextPoint.Y - finalPoint.Y;
+
+                        if (trackIRPrec.xJoystickMode) {
+                            finalPoint.X = nextPoint.X;
+                        }
+
+                        if (trackIRPrec.yJoystickMode) {
+                            finalPoint.Y = nextPoint.Y;
+                        }
+
+                        sendRelativeMoveMouseEvent (
+                            trackIRPrec.xJoystickMode ? diffX : nextPoint.X,
+                            trackIRPrec.yJoystickMode ? diffY : nextPoint.Y);
                     }
                     else
                     {
@@ -396,6 +411,10 @@ namespace PrecisionGazeMouse
 
         private void sendRelativeMoveMouseEvent (int dx, int dy) {
             mouse_event (MOUSEEVENTF_MOVE | MOUSEEVENTF_MOVE_NOCOALESCE, (uint)dx, (uint)dy, 0, 0);
+        }
+
+        private void sendAbsoluteMoveMouseEvent (int x, int y) {
+            //mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_MOVE_NOCOALESCE)
         }
 
         private Point getScreenCenter()
